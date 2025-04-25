@@ -88,3 +88,37 @@
         mix-blend-mode: difference;
         content: var(--blazor-load-percentage-text, '0%')
     }
+
+.loader-image {
+    height: 16rem;
+    width: 16rem;
+    padding-bottom: 2rem;
+    animation-name: nevalyashka;
+    animation-duration: 1s;
+}
+
+@keyframes nevalyashka {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-15deg);
+    }
+
+    40% {
+        transform: rotate(15deg)
+    }
+
+    60% {
+        transform: rotate(-30deg);
+    }
+
+    80% {
+        transform: rotate(30deg)
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
