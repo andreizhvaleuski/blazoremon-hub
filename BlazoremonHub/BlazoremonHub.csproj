@@ -7,14 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Include="Styles\**\*.css" Set="PostCss" />
-        <UpToDateCheckInput Include="postcss.config.js" Set="PostCss" />
-        <UpToDateCheckInput Include="package.json" Set="PostCss" />
-        <UpToDateCheckInput Include="package-lock.json" Set="PostCss" />
-        <UpToDateCheckOutput Include="wwwroot\**\*.cs" Set="PostCss" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Content Remove="package-lock.json" />
         <Content Remove="package.json" />
         <Content Remove="wwwroot\css\.gitkeep" />
