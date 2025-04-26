@@ -1,7 +1,7 @@
-﻿module.exports = ({ env }) => ({
+﻿module.exports = {
     plugins: [
         require('autoprefixer'),
-        env === 'production' ? require('cssnano')({ preset: 'default' }) : false
-    ].filter(Boolean),
-    map: env === 'production' ? false : 'inline'
-});
+        require('cssnano')
+    ],
+    map: 'inline'
+};

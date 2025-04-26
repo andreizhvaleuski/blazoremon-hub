@@ -37,11 +37,11 @@
     </Target>
 
     <Target Name="ProcessStaticStyles" BeforeTargets="PrepareForBuild">
-        <Exec Command="npx postcss-cli Styles/**/*.css --base Styles --dir wwwroot/css" />
+        <Exec Command="npx postcss-cli Styles/**/*.css --base Styles --dir wwwroot/css --config postcss.config.js" />
     </Target>
 
     <Target Name="ProcessBundledScopedCss" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
-        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/projectbundle/$(ProjectName).bundle.scp.css --replace" />
+        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/**/*.css --replace  --config postcss.config.js" />
     </Target>
 
     <Target Name="CleanWwwRootCss" AfterTargets="Clean">
