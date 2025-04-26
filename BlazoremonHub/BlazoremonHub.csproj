@@ -4,17 +4,16 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <!-- The wwwroot directory is tracked by default, but we want it to ignore build-time generated css -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\css\**\*.css</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Remove="package-lock.json" />
-        <Content Remove="package.json" />
-        <Content Remove="wwwroot\css\.gitkeep" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="package-lock.json" />
-        <None Include="package.json" />
+        <UpToDateCheckInput Include="postcss.config.js" Set="ProcessCss" />
+        <UpToDateCheckInput Include="package.json" Set="ProcessCss" />
+        <UpToDateCheckInput Include="package-lock.json" Set="ProcessCss" />
+        <UpToDateCheckInput Include="Styles\**\*.css" Set="ProcessCss" />
+        <UpToDateCheckOutput Include="wwwroot\css\**\*.css" Set="ProcessCss" />
     </ItemGroup>
 
     <ItemGroup>
