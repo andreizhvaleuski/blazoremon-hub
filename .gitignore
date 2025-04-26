@@ -400,3 +400,4 @@ riderModule.iml
 
 wwwroot/css/
 !wwwroot/css/.gitkeep
+/BlazoremonHub/wwwroot/css/app.css

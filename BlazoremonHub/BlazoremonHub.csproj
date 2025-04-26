@@ -1,25 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Include="Styles\**\*.css" Set="TailwindCss" />
-        <UpToDateCheckInput Include="postcss.config.js" Set="TailwindCss" />
-        <UpToDateCheckInput Include="package.json" Set="TailwindCss" />
-        <UpToDateCheckInput Include="package-lock.json" Set="TailwindCss" />
-        <UpToDateCheckOutput Include="wwwroot\css\**\*.css" Set="TailwindCss" />
+        <UpToDateCheckInput Include="Styles\**\*.css" Set="PostCss" />
+        <UpToDateCheckInput Include="postcss.config.js" Set="PostCss" />
+        <UpToDateCheckInput Include="package.json" Set="PostCss" />
+        <UpToDateCheckInput Include="package-lock.json" Set="PostCss" />
+        <UpToDateCheckOutput Include="wwwroot\**\*.cs" Set="PostCss" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Remove="package-lock.json" />
+        <Content Remove="package.json" />
+        <Content Remove="wwwroot\css\.gitkeep" />
+    </ItemGroup>
 
     <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.4" PrivateAssets="all" />
-    <PackageReference Include="MudBlazor" Version="8.5.1" />
-  </ItemGroup>
+        <None Include="package-lock.json" />
+        <None Include="package.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.4" PrivateAssets="all" />
+        <PackageReference Include="MudBlazor" Version="8.5.1" />
+    </ItemGroup>
 
     <Target Name="InstallNpmDependencies" BeforeTargets="ProcessStaticStyles;ProcessBundledScopedCss">
         <Exec Command="npm i" Condition="!Exists('node_modules')" />
@@ -31,8 +41,8 @@
     </Target>
 
     <Target Name="ProcessBundledScopedCss" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
-      <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/projectbundle/$(ProjectName).styles.css --replace" />
-  </Target>
+        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss\projectbundle\$(ProjectName).bundle.scp.css --replace" />
+    </Target>
 
     <Target Name="CleanWwwRootCss" AfterTargets="Clean">
         <ItemGroup>
