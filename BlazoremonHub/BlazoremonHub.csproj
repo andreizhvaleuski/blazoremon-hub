@@ -4,16 +4,22 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <!-- The wwwroot directory is tracked by default, but we want it to ignore build-time generated css -->
-        <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\css\**\*.css</DefaultItemExcludes>
     </PropertyGroup>
+
+    <!--Dont Include in build output-->
+    <ItemGroup>
+        <Content Remove="postcss.config.js" />
+        <Content Remove="package.json" />
+        <Content Remove="package-lock.json" />
+        <Content Remove="wwwroot/css/.gitkeep" />
+    </ItemGroup>
 
     <ItemGroup>
         <UpToDateCheckInput Include="postcss.config.js" Set="ProcessCss" />
         <UpToDateCheckInput Include="package.json" Set="ProcessCss" />
         <UpToDateCheckInput Include="package-lock.json" Set="ProcessCss" />
         <UpToDateCheckInput Include="Styles\**\*.css" Set="ProcessCss" />
-        <UpToDateCheckOutput Include="wwwroot\css\**\*.css" Set="ProcessCss" />
+        <UpToDateCheckBuilt Include="wwwroot\css\**\*.css" Set="ProcessCss" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,27 +28,38 @@
         <PackageReference Include="MudBlazor" Version="8.5.1" />
     </ItemGroup>
 
-    <Target Name="InstallNpmDependencies" BeforeTargets="ProcessStaticStyles;ProcessBundledScopedCss">
+    <Target Name="InstallNpmDependencies">
         <Exec Command="npm i" Condition="!Exists('node_modules')" />
         <Exec Command="npm ci" Condition="'$(Configuration)' == 'Release'" />
     </Target>
 
-    <Target Name="ProcessStaticStyles" BeforeTargets="PrepareForBuild">
-        <Exec Command="npx postcss-cli Styles/**/*.css --base Styles --dir wwwroot/css --config postcss.config.js" />
+    <Target Name="ProcessStaticStyles" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="InstallNpmDependencies" BeforeTargets="PrepareForBuild" Inputs="postcss.config.js;package.json;package-lock.json;Styles\**\*.css" Outputs="wwwroot\css\**\*.css">
+        <Exec Command="npx postcss-cli Styles/**/*.css --base Styles --dir wwwroot/css" />
+        <ItemGroup>
+            <None Remove="Styles/**/*.css" />
+            <!-- Fix to only include files that were newly generated as to not have duplicate Content items. -->
+            <_NewCompiledCssFiles Include="Styles/**/*.css" Exclude="@(Content)" />
+            <Content Include="@(_NewCompiledCssFiles)" />
+        </ItemGroup>
     </Target>
 
-    <Target Name="ProcessBundledScopedCss" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
-        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/**/*.css --replace  --config postcss.config.js" />
+    <Target Name="ProcessBundledScopedCss" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="InstallNpmDependencies" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
+        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/**/*.css --replace" />
     </Target>
 
-    <Target Name="CleanWwwRootCss" AfterTargets="Clean">
+    <Target Name="ShouldCleanGeneratedFiles" BeforeTargets="BeforeRebuild">
+        <PropertyGroup>
+            <CleanGeneratedFiles>false</CleanGeneratedFiles>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="CleanGeneratedFiles" BeforeTargets="Clean" Condition="'$(CleanGeneratedFiles)' != 'false'">
         <ItemGroup>
             <FilesToDelete Include="$(ProjectDir)wwwroot/css/**/*.css" />
         </ItemGroup>
         <Delete Files="@(FilesToDelete)">
             <Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
         </Delete>
-        <Message Text="Cleaned up wwwroot/css directory: @(FilesDeleted)" Importance="high" />
     </Target>
 
 </Project>
