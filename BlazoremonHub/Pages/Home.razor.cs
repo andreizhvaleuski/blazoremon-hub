@@ -114,6 +114,6 @@ public interface IPokeApi
     Task<NamedApiResourceList> GetPokemons([Query] int limit = 20, [Query] int offset = 0);
 }
 
-public record class NamedApiResourceList(int Count, string Next, string Previous, IImmutableList<NamedApiResource> Results);
+public record class NamedApiResourceList(int Count, string Next, string Previous, IEnumerable<NamedApiResource> Results);
 
 public record class NamedApiResource(string Name, string Url);
