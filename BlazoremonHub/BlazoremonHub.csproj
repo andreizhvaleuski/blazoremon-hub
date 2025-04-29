@@ -35,7 +35,7 @@
         <Exec Command="npm ci" Condition="'$(Configuration)' == 'Release'" />
     </Target>
 
-    <Target Name="ProcessStaticStyles" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="InstallNpmDependencies" BeforeTargets="PrepareForBuild" Inputs="postcss.config.js;package.json;package-lock.json;Styles\**\*.css" Outputs="wwwroot\css\**\*.css">
+    <Target Name="ProcessStaticStyles" DependsOnTargets="InstallNpmDependencies" BeforeTargets="PrepareForBuild" Inputs="postcss.config.js;package.json;package-lock.json;Styles\**\*.css" Outputs="wwwroot\css\**\*.css">
         <Exec Command="npx postcss-cli Styles/**/*.css --base Styles --dir wwwroot/css" />
         <ItemGroup>
             <None Remove="Styles/**/*.css" />
@@ -45,7 +45,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="ProcessBundledScopedCss" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="InstallNpmDependencies" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
+    <Target Name="ProcessBundledScopedCss" DependsOnTargets="InstallNpmDependencies" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
         <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/**/*.css --replace" />
     </Target>
 
