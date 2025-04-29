@@ -7,63 +7,101 @@ namespace BlazoremonHub.Pages;
 public partial class Home : ComponentBase
 {
     private readonly IPokeApi _pokeApi;
-    private bool _isLoading = true;
-    private IImmutableList<string> _pokemons;
-    private int _pages;
-    private int _selectedPage;
+    private readonly IImmutableList<int> _pageSizes = new[] { 25, 50, 75, 100 }.ToImmutableList();
 
-    private IImmutableList<int> _pageSizes = new[] { 10, 25, 50 }.ToImmutableList();
-    private int _pageSize = 10;
+    private int _totalPages;
+    private int _currentPage = 1;
+    private int _pageSize;
+    private RemoteOperationState _operationState;
+    private IImmutableList<PokemonModel>? _pokemons;
 
-    public int CurrentPage
+    private int? TotalPokemons => _pokemons?.Count;
+
+    private int CurrentPage
     {
-        get;
+        get => _currentPage;
         set
         {
-            field = value;
-            LoadDataAsync();
-        }
-    } = 1;
+            if (_currentPage == value)
+            {
+                return;
+            }
 
-    public int PageSize
+            _currentPage = value;
+
+            LoadPokemonsAsync();
+        }
+    }
+
+    private int PageSize
     {
-        get;
+        get => _pageSize;
         set
         {
-            field = value;
-            LoadDataAsync();
+            if (_pageSize == value)
+            {
+                return;
+            }
+
+            _pageSize = value;
+            _currentPage = 1;
+
+            LoadPokemonsAsync();
         }
-    } = 1;
+    }
 
     public Home(IPokeApi pokeApi)
     {
         this._pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
+
+        _pageSize = _pageSizes[0];
     }
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
-        var pokemons = await _pokeApi.GetPokemons(limit: _pageSize, offset: _pageSize * _selectedPage);
-
-        _pages = pokemons.Count / _pageSize;
-
-        _isLoading = false;
+        await LoadPokemonsAsync();
     }
 
-    protected override async Task OnParametersSetAsync()
+    private async Task LoadPokemonsAsync()
     {
-        _isLoading = true;
-        var pokemons = await _pokeApi.GetPokemons(limit: _pageSize, offset: _pageSize * _selectedPage);
+        _operationState = RemoteOperationState.InProgress;
+        StateHasChanged();
 
-        _pages = pokemons.Count / _pageSize;
+        try
+        {
+            // Intentional delay.
+            await Task.Delay(1000);
 
-        _isLoading = false;
+            var limit = _pageSize;
+            var offset = _pageSize * (_currentPage - 1);
+
+            var response = await _pokeApi.GetPokemons(limit: limit, offset: offset);
+
+            _totalPages = (int)Math.Ceiling((double)response.Count / _pageSize);
+
+            _pokemons = response.Results
+                .Select(result => new PokemonModel(result.Name, result.Url))
+                .ToImmutableList();
+            _operationState = RemoteOperationState.Succeeded;
+        }
+        catch (Exception)
+        {
+            _operationState = RemoteOperationState.Failed;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
+}
 
-    private Task LoadDataAsync()
-    {
-        return Task.CompletedTask;
-    }
+public record class PokemonModel(string Name, string Url);
+
+public enum RemoteOperationState
+{
+    InProgress = 0,
+    Succeeded = 1,
+    Failed = 2
 }
 
 public interface IPokeApi

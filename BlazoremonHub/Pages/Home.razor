@@ -6,17 +6,40 @@
     <MudGrid Spacing="6" Justify="Justify.Center">
         <MudItem xs="12">
             <MudPaper Class="pa-4">
+                @switch (_operationState)
+                {
+                    case RemoteOperationState.InProgress:
+                        <MudProgressCircular Indeterminate="@true" />
+                        break;
 
+                    case RemoteOperationState.Failed:
+                        <MudText>Data fetching failed.</MudText>
+                        break;
+
+                    case RemoteOperationState.Succeeded:
+                        <MudGrid Spacing="6" Justify="Justify.Center">
+                            @foreach (var pokemon in _pokemons)
+                            {
+                                <MudItem @key="pokemon.Name" xs="3">
+                                    <MudLink Href="@pokemon.Url">@pokemon.Name</MudLink>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                        break;
+                }
             </MudPaper>
         </MudItem>
         <MudItem xs="12">
             <MudPaper Class="pa-4">
                 <MudGrid Spacing="2" Justify="Justify.SpaceBetween">
-                    <MudItem xs="10" Class="align-content-center">
-                        <MudPagination Color="Color.Primary" Count="@_pages" @bind-Selected="_selectedPage" />
+                    <MudItem xs="8" Class="align-content-center">
+                        <MudPagination Color="Color.Primary" Count="@_totalPages" @bind-Selected="CurrentPage" />
                     </MudItem>
                     <MudItem xs="2" Class="align-content-center">
-                        <MudSelect @bind-Value="_pageSize" Label="Page size:"  Variant="Variant.Text" on>
+                        <MudText Typo="Typo.caption">Total Pokémons: @(TotalPokemons?.ToString() ?? "Unknown")</MudText>
+                    </MudItem>
+                    <MudItem xs="2" Class="align-content-center">
+                        <MudSelect @bind-Value="PageSize" Label="Page size" Variant="Variant.Text" FullWidth="@true">
                             @foreach (var pageSize in _pageSizes)
                             {
                                 <MudSelectItem @key="pageSize" Value="@pageSize">@pageSize</MudSelectItem>
