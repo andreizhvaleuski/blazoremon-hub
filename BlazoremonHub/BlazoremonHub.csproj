@@ -6,7 +6,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
-    <!--Dont Include in build output-->
+    <ItemGroup>
+        <Content Include="wwwroot/site.webmanifest" />
+    </ItemGroup>
+
     <ItemGroup>
         <Content Remove="postcss.config.js" />
         <Content Remove="package.json" />
