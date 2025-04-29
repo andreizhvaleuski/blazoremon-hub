@@ -1,13 +1,15 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Refit;
 
 namespace BlazoremonHub.Pages;
 
 public partial class Home : ComponentBase
 {
-    private readonly IPokeApi _pokeApi;
     private readonly IImmutableList<int> _pageSizes = new[] { 25, 50, 75, 100 }.ToImmutableList();
+    private readonly IPokeApi _pokeApi;
+    private readonly ILogger<Home> _logger;
 
     private int _totalPages;
     private int _currentPage = 1;
@@ -50,9 +52,10 @@ public partial class Home : ComponentBase
         }
     }
 
-    public Home(IPokeApi pokeApi)
+    public Home(IPokeApi pokeApi, ILogger<Home> logger)
     {
-        this._pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
+        _pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         _pageSize = _pageSizes[0];
     }
@@ -84,8 +87,9 @@ public partial class Home : ComponentBase
                 .ToImmutableList();
             _operationState = RemoteOperationState.Succeeded;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            _logger.LogError(exception, "Failed to fetch pokemons");
             _operationState = RemoteOperationState.Failed;
         }
         finally
