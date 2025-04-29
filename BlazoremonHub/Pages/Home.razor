@@ -1,8 +1,30 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home - Blazorémon Hub</PageTitle>
 
-<MudContainer>
-	<MudText Typo="Typo.h1">Hello, world!</MudText>
-	<MudText Typo="Typo.body1">Welcome to your new app.</MudText>
+<MudContainer Class="py-6">
+    <MudGrid Spacing="6" Justify="Justify.Center">
+        <MudItem xs="12">
+            <MudPaper Class="pa-4">
+
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Class="pa-4">
+                <MudGrid Spacing="2" Justify="Justify.SpaceBetween">
+                    <MudItem xs="10" Class="align-content-center">
+                        <MudPagination Color="Color.Primary" Count="@_pages" @bind-Selected="_selectedPage" />
+                    </MudItem>
+                    <MudItem xs="2" Class="align-content-center">
+                        <MudSelect @bind-Value="_pageSize" Label="Page size:"  Variant="Variant.Text" on>
+                            @foreach (var pageSize in _pageSizes)
+                            {
+                                <MudSelectItem @key="pageSize" Value="@pageSize">@pageSize</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 </MudContainer>
