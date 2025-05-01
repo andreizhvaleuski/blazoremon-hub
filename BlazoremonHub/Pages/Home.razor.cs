@@ -1,9 +1,11 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
 namespace BlazoremonHub.Pages;
 
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public partial class Home : ComponentBase
 {
     private readonly IImmutableList<int> _pageSizes = new[] { 25, 50, 75, 100 }.ToImmutableList();

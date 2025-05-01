@@ -47,8 +47,8 @@ jobs:
         with:
           global-json-file: global.json
 
-      #- name: Install WASM
-      #  run: dotnet workload install wasm-tools
+      - name: install wasm
+        run: dotnet workload install wasm-tools
 
       - name: Publish app
         run: dotnet publish BlazoremonHub/BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
@@ -59,9 +59,7 @@ jobs:
           html_path: ${{ env.PUBLISH_STATIC_DIR }}/index.html
           base_href: /blazoremon-hub/
 
-      # Allow files and folders starting with an underscore
-      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project
-      - name: Add .nojekyll file
+      - name: Allow files and folders starting with an underscore
         run: touch ${{ env.PUBLISH_STATIC_DIR }}/.nojekyll
         
       - name: Setup Pages
