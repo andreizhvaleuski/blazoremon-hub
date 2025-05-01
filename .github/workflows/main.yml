@@ -1,7 +1,7 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 env:
-  PUBLISH_DIR: balzoremen-hub/output
+  PUBLISH_DIR: publish
   DOTNET_NOLOGO: true
 
 on:
@@ -46,14 +46,22 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Install WASM
+        run: dotnet workload install wasm-tools
+
       - name: Publish app
         run: dotnet publish BlazoremonHub/BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
 
       - name: Rewrite base href
         uses: stevesandersonms/ghaction-rewrite-base-href@v1
         with:
-          html_path: ${{ env.PUBLISH_DIR }}/index.html
+          html_path: ${{ env.PUBLISH_DIR }}/wwwroot/index.html
           base_href: /blazoremon-hub/
+
+      # Allow files and folders starting with an underscore
+      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project
+      - name: Add .nojekyll file
+        run: touch ${{ env.PUBLISH_DIR }}/wwwroot/.nojekyll
         
       - name: Setup Pages
         uses: actions/configure-pages@v5
