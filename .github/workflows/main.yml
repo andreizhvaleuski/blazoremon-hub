@@ -47,7 +47,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: install wasm
+      - name: Install WASM tools
         run: dotnet workload install wasm-tools
 
       - name: Publish app
