@@ -2,6 +2,7 @@
 name: Deploy static content to Pages
 env:
   PUBLISH_DIR: publish
+  PUBLISH_STATIC_DIR: publish/wwwroot
   DOTNET_NOLOGO: true
 
 on:
@@ -55,13 +56,13 @@ jobs:
       - name: Rewrite base href
         uses: stevesandersonms/ghaction-rewrite-base-href@v1
         with:
-          html_path: ${{ env.PUBLISH_DIR }}/wwwroot/index.html
+          html_path: ${{ env.PUBLISH_STATIC_DIR }}/index.html
           base_href: /blazoremon-hub/
 
       # Allow files and folders starting with an underscore
       # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project
       - name: Add .nojekyll file
-        run: touch ${{ env.PUBLISH_DIR }}/wwwroot/.nojekyll
+        run: touch ${{ env.PUBLISH_STATIC_DIR }}/.nojekyll
         
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -69,7 +70,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ env.PUBLISH_DIR }}
+          path: ${{ env.PUBLISH_STATIC_DIR }}
 
       - name: Deploy to GitHub Pages
         id: deployment
