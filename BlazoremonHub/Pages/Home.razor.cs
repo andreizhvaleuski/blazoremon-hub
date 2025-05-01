@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using Refit;
 
 namespace BlazoremonHub.Pages;

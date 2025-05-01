@@ -44,10 +44,6 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="ProcessBundledScopedCss" DependsOnTargets="InstallNpmDependencies" AfterTargets="ScopedCssFiles" BeforeTargets="CopyFilesToOutputDirectory">
-        <Exec Command="npx postcss-cli $(IntermediateOutputPath)scopedcss/**/*.css --replace" />
-    </Target>
-
     <Target Name="ShouldCleanGeneratedFiles" BeforeTargets="BeforeRebuild">
         <PropertyGroup>
             <CleanGeneratedFiles>false</CleanGeneratedFiles>
