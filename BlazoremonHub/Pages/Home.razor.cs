@@ -31,7 +31,7 @@ public partial class Home : ComponentBase
 
             _currentPage = value;
 
-            //LoadPokemonsAsync();
+            LoadPokemonsAsync();
         }
     }
 
@@ -48,53 +48,53 @@ public partial class Home : ComponentBase
             _pageSize = value;
             _currentPage = 1;
 
-            //LoadPokemonsAsync();
+            LoadPokemonsAsync();
         }
     }
 
-    //public Home(IPokeApi pokeApi)
-    //{
-    //    _pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
+    public Home(IPokeApi pokeApi)
+    {
+        _pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
 
-    //    _pageSize = _pageSizes[0];
-    //}
+        _pageSize = _pageSizes[0];
+    }
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await LoadPokemonsAsync();
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPokemonsAsync();
+    }
 
-    //private async Task LoadPokemonsAsync()
-    //{
-    //    _operationState = RemoteOperationState.InProgress;
-    //    StateHasChanged();
+    private async Task LoadPokemonsAsync()
+    {
+        _operationState = RemoteOperationState.InProgress;
+        StateHasChanged();
 
-    //    try
-    //    {
-    //        // Intentional delay.
-    //        await Task.Delay(1000);
+        try
+        {
+            // Intentional delay.
+            await Task.Delay(1000);
 
-    //        var limit = _pageSize;
-    //        var offset = _pageSize * (_currentPage - 1);
+            var limit = _pageSize;
+            var offset = _pageSize * (_currentPage - 1);
 
-    //        var response = await _pokeApi.GetPokemons(limit: limit, offset: offset);
+            var response = await _pokeApi.GetPokemons(limit: limit, offset: offset);
 
-    //        _totalPages = (int)Math.Ceiling((double)response.Count / _pageSize);
+            _totalPages = (int)Math.Ceiling((double)response.Count / _pageSize);
 
-    //        _pokemons = response.Results
-    //            .Select(result => new PokemonModel(result.Name, result.Url))
-    //            .ToImmutableList();
-    //        _operationState = RemoteOperationState.Succeeded;
-    //    }
-    //    catch (Exception exception)
-    //    {
-    //        _operationState = RemoteOperationState.Failed;
-    //    }
-    //    finally
-    //    {
-    //        StateHasChanged();
-    //    }
-    //}
+            _pokemons = response.Results
+                .Select(result => new PokemonModel(result.Name, result.Url))
+                .ToImmutableList();
+            _operationState = RemoteOperationState.Succeeded;
+        }
+        catch (Exception exception)
+        {
+            _operationState = RemoteOperationState.Failed;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
 }
 
 public record class PokemonModel(string Name, string Url);
