@@ -9,7 +9,9 @@ namespace BlazoremonHub.Pages;
 public partial class Home : ComponentBase
 {
     private readonly IImmutableList<int> _pageSizes = new[] { 25, 50, 75, 100 }.ToImmutableList();
-    private readonly IPokeApi _pokeApi;
+
+    [Inject]
+    public IPokeApi PokeApi {  get; set; }
 
     private int _totalPages;
     private int _currentPage = 1;
@@ -52,10 +54,8 @@ public partial class Home : ComponentBase
         }
     }
 
-    public Home(IPokeApi pokeApi)
+    public Home()
     {
-        _pokeApi = pokeApi ?? throw new ArgumentNullException(nameof(pokeApi));
-
         _pageSize = _pageSizes[0];
     }
 
@@ -77,7 +77,7 @@ public partial class Home : ComponentBase
             var limit = _pageSize;
             var offset = _pageSize * (_currentPage - 1);
 
-            var response = await _pokeApi.GetPokemons(limit: limit, offset: offset);
+            var response = await PokeApi.GetPokemons(limit: limit, offset: offset);
 
             _totalPages = (int)Math.Ceiling((double)response.Count / _pageSize);
 
