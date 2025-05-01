@@ -47,7 +47,7 @@ jobs:
           global-json-file: global.json
 
       - name: Publish app
-        run: dotnet publish BlazoremonHub\BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
+        run: dotnet publish BlazoremonHub/BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
 
       - name: Rewrite base href
         uses: stevesandersonms/ghaction-rewrite-base-href@v1
