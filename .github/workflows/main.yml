@@ -47,8 +47,8 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Install WASM
-        run: dotnet workload install wasm-tools
+      #- name: Install WASM
+      #  run: dotnet workload install wasm-tools
 
       - name: Publish app
         run: dotnet publish BlazoremonHub/BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
