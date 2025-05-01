@@ -1,7 +1,8 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 env:
-  PUBLISH_DIR: BlazoremonHub/bin/Release/net9.0/publish/wwwroot
+  PUBLISH_DIR: balzoremen-hub/output
+  DOTNET_NOLOGO: true
 
 on:
   # Runs on pushes targeting the default branch for the app's folder path
@@ -43,10 +44,10 @@ jobs:
       - name: Get latest .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0'
+          global-json-file: global.json
 
       - name: Publish app
-        run: dotnet publish BlazoremonHub -c Release
+        run: dotnet publish BlazoremonHub\BlazoremonHub.csproj -c Release -o ${{ env.PUBLISH_DIR }}
 
       - name: Rewrite base href
         uses: stevesandersonms/ghaction-rewrite-base-href@v1
