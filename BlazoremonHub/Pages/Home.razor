@@ -36,7 +36,7 @@
                         <MudPagination Color="Color.Primary" Count="@_totalPages" @bind-Selected="CurrentPage" />
                     </MudItem>
                     <MudItem xs="2" Class="align-content-center">
-                        <MudText Typo="Typo.caption">Total Pokémons: @(TotalPokemons?.ToString() ?? "Unknown")</MudText>
+                        <MudText Typo="Typo.caption">Total Pokémons: @(_totalPokemons.ToString())</MudText>
                     </MudItem>
                     <MudItem xs="2" Class="align-content-center">
                         <MudSelect @bind-Value="PageSize" Label="Page size" Variant="Variant.Text" FullWidth="@true">
