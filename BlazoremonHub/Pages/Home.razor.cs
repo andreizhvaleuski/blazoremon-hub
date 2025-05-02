@@ -18,6 +18,7 @@ public partial class Home : ComponentBase
     private int _pageSize;
     private RemoteOperationState _operationState;
     private IImmutableList<PokemonModel>? _pokemons;
+    private int _totalPokemons;
 
     private int? TotalPokemons => _pokemons?.Count;
 
@@ -84,6 +85,9 @@ public partial class Home : ComponentBase
             _pokemons = response.Results
                 .Select(result => new PokemonModel(result.Name, result.Url))
                 .ToImmutableList();
+
+            _totalPokemons = response.Count;
+
             _operationState = RemoteOperationState.Succeeded;
         }
         catch (Exception exception)
