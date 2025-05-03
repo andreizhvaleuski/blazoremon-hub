@@ -1,0 +1,40 @@
+﻿<div>
+	@if (!string.IsNullOrWhiteSpace(_firstSection))
+	{
+		<MudText Typo="Typo.h5">
+			@_firstSection
+			@if (!string.IsNullOrWhiteSpace(_secondSection))
+			{
+				<MudText Typo="Typo.h5" Inline="@true" Class="ml-2 pa-2 mud-theme-secondary rounded">@_secondSection</MudText/>
+			}
+		</MudText/>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public string? Text { get; set; }
+
+	private string? _firstSection;
+	private string? _secondSection;
+
+	protected override Task OnParametersSetAsync()
+	{
+		var splitted = Text?.Split(
+			separator: (char[]?)null, // Split by white-spaces
+			count: 2,
+			options: StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+		if (splitted is null || splitted.Length == 0)
+		{
+			_firstSection = _secondSection = null;
+		}
+		else
+		{
+			_firstSection = splitted[0];
+			_secondSection = splitted.Length == 2 ? splitted[1] : null;
+		}
+
+		return base.OnParametersSetAsync();
+	}
+}
