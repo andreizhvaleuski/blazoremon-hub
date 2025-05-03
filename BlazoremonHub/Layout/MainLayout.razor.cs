@@ -12,6 +12,7 @@ public partial class MainLayout : LayoutComponentBase
     {
         if (firstRender)
         {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
             await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
             StateHasChanged();
         }

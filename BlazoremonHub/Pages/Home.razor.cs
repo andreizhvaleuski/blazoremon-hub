@@ -20,8 +20,6 @@ public partial class Home : ComponentBase
     private IImmutableList<PokemonModel>? _pokemons;
     private int _totalPokemons;
 
-    private int? TotalPokemons => _pokemons?.Count;
-
     private int CurrentPage
     {
         get => _currentPage;
